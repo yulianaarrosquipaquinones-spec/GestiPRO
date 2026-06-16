@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GESTIPro App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --verde-principal: #00966b;
+            --verde-oscuro: #007a57;
+            --verde-claro: #e6f5f0;
+            --azul-card: #1d72f3;
+            --morado-card: #7839fa;
+            --rojo: #e63946;
+            --rojo-claro: #ffebee;
+            --naranja: #f9a825;
+            --naranja-claro: #fff8e1;
+            --gris-fondo: #f4f6f9;
+            --gris-texto: #1e293b;
+            --gris-suave: #64748b;
+            --blanco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--gris-texto);
+        }
+
+        /* Contenedor Mockup Celular exacto */
+        .phone-mockup {
+            width: 100%;
+            max-width: 412px;
+            height: 840px;
+            background: var(--blanco);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Barra de estado superior simulada */
+        .status-bar-sim {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 24px 6px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--blanco);
+            z-index: 10;
+        }
+        .status-bar-sim.dark-bg {
+            background: transparent;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        /* Contenedor de pantallas */
+        .screens-container {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            background: var(--gris-fondo);
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 16px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Reutilizables de Diseño */
+        .btn-main {
+            background: var(--verde-principal);
+            color: var(--blanco);
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-main:hover { background: var(--verde-oscuro); }
+
+        .input-round {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .input-round i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gris-suave);
+        }
+        .input-round input, .input-round select {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 14px;
+            outline: none;
+            background: var(--blanco);
+        }
+
+        /* PANTALLA 1: LOGIN */
+        #screen-login {
+            background: linear-gradient(180deg, #ffffff 0%, #e6f5f0 100%);
+            justify-content: space-between;
+            padding-top: 50px;
+        }
+        .login-hero { text-align: center; }
+        .login-logo-img { font-size: 55px; color: var(--verde-principal); margin-bottom: 5px; }
+        .login-title { font-size: 34px; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
+        .login-title span { color: var(--verde-principal); }
+        .login-subtitle { font-size: 14px; color: var(--gris-suave); margin-top: 4px; }
+        .login-illustration { font-size: 75px; color: var(--verde-principal); margin: 20px 0; }
+        .login-social { display: flex; gap: 12px; margin-top: 14px; }
+        .btn-social { flex: 1; padding: 12px; border: 1px solid #cbd5e1; border-radius: 12px; background: white; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+        .login-footer-banner { background: var(--verde-principal); color: white; padding: 12px; border-radius: 16px; display: flex; align-items: center; gap: 12px; font-size: 13px; text-align: left; margin-top: 15px; }
+
+        /* PANTALLA 2: DASHBOARD */
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .hero-card { background: var(--verde-principal); color: white; padding: 16px; border-radius: 20px; margin-bottom: 12px; position: relative; }
+        .hero-graph { position: absolute; right: 16px; bottom: 16px; width: 120px; height: 50px; }
+        .dash-row-cards { display: flex; gap: 12px; margin-bottom: 16px; }
+        .dash-mini-card { flex: 1; padding: 14px; border-radius: 16px; color: white; }
+        .grid-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+        .grid-btn { background: white; border-radius: 14px; padding: 12px 4px; text-align: center; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .grid-btn i { font-size: 20px; padding: 10px; border-radius: 12px; }
+        .summary-box { background: white; border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+        .summary-cards { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
+        .sum-card { flex: 1; background: var(--gris-fondo); padding: 10px; border-radius: 10px; font-size: 12px; }
+        .dash-auto-backup { background: white; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* PANTALLA 3: VENTAS */
+        .ventas-tabs { display: flex; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+        .v-tab { flex: 1; text-align: center; padding: 8px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; color: var(--gris-suave); }
+        .v-tab.active { background: white; color: var(--verde-principal); }
+        .product-list-container { flex: 1; overflow-y: auto; margin-bottom: 12px; }
+        .horiz-prod-card { background: white; border-radius: 14px; padding: 10px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border: 1px solid #f1f5f9; }
+        .prod-img-box { width: 45px; height: 45px; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--verde-principal); }
+        .prod-details { flex: 1; }
+        .prod-counter { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 4px 8px; border-radius: 20px; }
+        .count-btn { border: none; background: transparent; font-size: 16px; font-weight: bold; cursor: pointer; width: 20px; }
+        .checkout-summary { background: white; border-radius: 16px; padding: 14px; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); }
+
+        /* PANTALLA 4: INVENTARIO */
+        .inv-pills { display: flex; gap: 8px; margin-bottom: 12px; }
+        .pill-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; background: #e2e8f0; color: var(--gris-suave); }
+        .pill-btn.active-green { background: var(--verde-principal); color: white; }
+        .pill-btn.active-red { background: var(--rojo-claro); color: var(--rojo); }
+        .stock-row-card { background: white; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .status-tag { padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+        .tag-ok { background: var(--verde-claro); color: var(--verde-principal); }
+        .tag-low { background: var(--rojo-claro); color: var(--rojo); }
+        .tag-none { background: #fee2e2; color: #991b1b; }
+
+        /* PANTALLA 5: ALERTAS */
+        .alert-top-cards { display: flex; gap: 12px; margin-bottom: 16px; }
+        .alert-top-card { flex: 1; padding: 14px; border-radius: 16px; position: relative; }
+        .alert-top-card i { position: absolute; top: 14px; left: 14px; font-size: 18px; }
+
+        /* PANTALLA 6: SIMULADOR */
+        .sim-kpi-row { background: white; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .sim-graph-box { background: white; border-radius: 16px; padding: 14px; height: 110px; margin-top: 15px; display: flex; align-items: flex-end; position: relative; }
+
+        /* PANTALLA 7: RESPALDO */
+        .backup-center { text-align: center; padding: 30px 10px; }
+        .cloud-illustration { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; background: var(--verde-claro); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .cloud-illustration i.fa-cloud { font-size: 60px; color: var(--verde-principal); }
+        .cloud-illustration i.fa-check { position: absolute; font-size: 18px; color: white; background: var(--verde-principal); padding: 5px; border-radius: 50%; }
+        .backup-list { background: white; border-radius: 16px; padding: 8px 16px; margin-bottom: 24px; }
+        .backup-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .backup-row:last-child { border: none; }
+
+        /* PANTALLA 8: PERFIL */
+        .profile-hero { text-align: center; background: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+        .profile-avatar { width: 75px; height: 75px; border-radius: 50%; background: #fed7aa; margin: 0 auto 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .verified-badge { background: var(--verde-claro); color: var(--verde-principal); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 6px; }
+        .profile-menu { background: white; border-radius: 20px; padding: 6px 16px; }
+        .p-menu-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .p-menu-item:last-child { border: none; }
+
+        /* MENÚ DE NAVEGACIÓN INFERIOR DE LA APP */
+        .app-nav-bar {
+            background: var(--blanco);
+            display: none;
+            justify-content: space-around;
+            padding: 10px 0 16px;
+            border-top: 1px solid #e2e8f0;
+            z-index: 20;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gris-suave);
+            cursor: pointer;
+            width: 60px;
+            gap: 3px;
+        }
+        .nav-btn.active { color: var(--verde-principal); }
+        .nav-btn i { font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-mockup">
+        
+        <!-- Barra de Estado Falsa Celular -->
+        <div id="sim-status-bar" class="status-bar-sim">
+            <div>9:41</div>
+            <div style="display:flex; gap: 5px;"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></div>
+        </div>
+
+        <div class="screens-container">
+
+            <!-- PANTALLA 1: LOGIN -->
+            <div id="screen-login" class="screen active">
+                <div class="login-hero">
+                    <div class="login-logo-img"><i class="fa-solid fa-chart-network" style="color:var(--verde-principal)"></i><i class="fa-solid fa-bag-shopping"></i></div>
+                    <h1 class="login-title">GESTI<span>Pro</span></h1>
+                    <p class="login-subtitle">Tu negocio en orden, tus decisiones seguras.</p>
+                    <div class="login-illustration">
+                        <!-- Dibujo de la bodega del toldo verde y blanco -->
+                        <div style="width:140px; height:80px; background:#f59e0b; margin: 0 auto; border-radius: 4px; position:relative; border-bottom:4px solid #b45309;">
+                            <div style="width:100%; height:25px; background: repeating-linear-gradient(90deg, var(--verde-principal), var(--verde-principal) 20px, white 20px, white 40px); border-radius: 4px 4px 0 0;"></div>
+                            <div style="width:30px; height:45px; background:#7f1d1d; position:absolute; bottom:0; left:20px;"></div>
+                            <div style="width:25px; height:25px; background:#93c5fd; position:absolute; bottom:20px; right:20px; border:2px solid white;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: 15px; text-align: center; font-size: 16px;">Iniciar sesión</h3>
+                    <div class="input-round">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" placeholder="Usuario o correo" value="juanperez@gmail.com">
+                    </div>
+                    <div class="input-round">
+                        <i class="fa-solid fa-lock"></i>
+                        <input id="login-pass" type="password" placeholder="Contraseña" value="••••••••">
+                        <i class="fa-solid fa-eye" style="left: auto; right: 16px; cursor: pointer;" onclick="togglePassword()"></i>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:15px; font-weight:600;">
+                        <label style="display:flex; align-items:center; gap:5px; color:var(--gris-suave);"><input type="checkbox" checked style="accent-color:var(--verde-principal)"> Recordarme</label>
+                        <a href="#" style="color:var(--azul-card); text-decoration:none;">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button class="btn-main" onclick="irADashboard()">Iniciar sesión</button>
+
+                    <p style="text-align:center; font-size:12px; color:var(--gris-suave); margin: 12px 0;">o continúa con</p>
+                    <div class="login-social">
+                        <button class="btn-social"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="16" alt="G"> Google</button>
+                        <button class="btn-social"><i class="fa-brands fa-facebook" style="color: #1877f2; font-size:16px;"></i> Facebook</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="login-footer-banner">
+                        <i class="fa-solid fa-cloud-shield" style="font-size:24px;"></i>
+                        <div>Tu información está protegida con respaldo en la nube.</div>
+                    </div>
+                    <p style="text-align:center; font-size:13px; margin-top:14px; font-weight:600; color:var(--gris-suave);">¿No tienes cuenta? <a href="#" style="color:var(--verde-principal); text-decoration:none;">Regístrate</a></p>
+                </div>
+            </div>
+
+            <!-- PANTALLA 2: DASHBOARD PRINCIPAL -->
+            <div id="screen-dash" class="screen">
+                <div class="dash-header">
+                    <div>
+                        <h2 style="font-size: 20px; font-weight: 800;">¡Hola, Juan! 👋</h2>
+                        <p style="font-size: 12px; color: var(--gris-suave);">Bienvenido a GESTIPro</p>
+                    </div>
+                    <div style="position:relative; cursor:pointer;" onclick="navegar('screen-alertas', 'btn-nav-alertas')">
+                        <i class="fa-solid fa-bell" style="font-size: 22px;"></i>
+                        <span style="position:absolute; top:-2px; right:-2px; background:var(--rojo); width:8px; height:8px; border-radius:50%;"></span>
+                    </div>
+                </div>
+
+                <div class="hero-card">
+                    <p style="font-size: 13px; opacity: 0.9;">Ventas del día</p>
+                    <h2 style="font-size: 28px; font-weight: 800; margin: 4px 0;">S/ 1,250.00</h2>
+                    <p style="font-size: 11px; opacity: 0.9;"><i class="fa-solid fa-arrow-trend-up"></i> ↑ 12.6% vs ayer</p>
+                    <!-- Línea de gráfico simulado -->
+                    <div class="hero-graph">
+                        <svg viewBox="0 0 100 40" width="100%" height="100%">
+                            <path d="M0,35 Q20,20 40,28 T80,10 T100,5" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="100" cy="5" r="3" fill="white" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="dash-row-cards">
+                    <div class="dash-mini-card" style="background:var(--azul-card);">
+                        <p style="font-size:11px; opacity:0.9;">Ventas del mes</p>
+                        <h4 style="font-size:16px; font-weight:800; margin-top:2px;">S/ 18,750.00</h4>
+                    </div>
+                    <div class="dash-mini-card" style="background:var(--morado-card);">
+                        <p style="font-size:11px; opacity:0.9;">Ganancia del mes</p>
+                        <h4 style="font-size:16px; font-weight:800; margin-top:2px;">S/ 4,250.00</h4>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:10px;">Accesos rápidos</h4>
+                <div class="grid-menu">
+                    <button class="grid-btn" onclick="navegar('screen-ventas', 'btn-nav-ventas')"><i class="fa-solid fa-cart-shopping" style="background:#e0f2fe; color:#0284c7;"></i><span style="font-size:11px; font-weight:600;">Nueva venta</span></button>
+                    <button class="grid-btn" onclick="navegar('screen-inventario', 'btn-nav-stock')"><i class="fa-solid fa-box" style="background:var(--verde-claro); color:var(--verde-principal);"></i><span style="font-size:11px; font-weight:600;">Inventario</span></button>
+                    <button class="grid-btn" onclick="navegar('screen-simulador', 'btn-nav-sim')"><i class="fa-solid fa-calculator" style="background:#fef3c7; color:#d97706;"></i><span style="font-size:11px; font-weight:600;">Simulador</span></button>
+                    <button class="grid-btn"><i class="fa-solid fa-chart-pie" style="background:#e0f2fe; color:var(--azul-card);"></i><span style="font-size:11px; font-weight:600;">Reportes</span></button>
+                    <button class="grid-btn" onclick="navegar('screen-alertas', 'btn-nav-alertas')"><i class="fa-solid fa-bell" style="background:#fee2e2; color:var(--rojo);"></i><span style="font-size:11px; font-weight:600;">Alertas</span></button>
+                    <button class="grid-btn" onclick="navegar('screen-respaldo', 'btn-nav-more')"><i class="fa-solid fa-cloud" style="background:#e0f2fe; color:#0369a1;"></i><span style="font-size:11px; font-weight:600;">Respaldo</span></button>
+                    <button class="grid-btn"><i class="fa-solid fa-store" style="background:var(--verde-claro); color:var(--verde-oscuro);"><
