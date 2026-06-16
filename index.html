@@ -341,3 +341,37 @@
                     <button class="grid-btn" onclick="navegar('screen-alertas', 'btn-nav-alertas')"><i class="fa-solid fa-bell" style="background:#fee2e2; color:var(--rojo);"></i><span style="font-size:11px; font-weight:600;">Alertas</span></button>
                     <button class="grid-btn" onclick="navegar('screen-respaldo', 'btn-nav-more')"><i class="fa-solid fa-cloud" style="background:#e0f2fe; color:#0369a1;"></i><span style="font-size:11px; font-weight:600;">Respaldo</span></button>
                     <button class="grid-btn"><i class="fa-solid fa-store" style="background:var(--verde-claro); color:var(--verde-oscuro);"><
+
+    <script>
+// El truco para simular el inicio de sesión
+document.addEventListener("DOMContentLoaded", function() {
+    // Buscamos el botón verde de Iniciar sesión
+    const botonLogin = document.querySelector('button[class*="verde"]'); 
+    
+    // Si no lo encuentra así, buscamos cualquier botón que diga "Iniciar sesión"
+    const botones = document.querySelectorAll('button');
+    let btnIniciar = null;
+    botones.forEach(b => {
+        if(b.textContent.toLowerCase().includes('iniciar')) {
+            btnIniciar = b;
+        }
+    });
+
+    const loginBtn = botonLogin || btnIniciar;
+
+    if (loginBtn) {
+        loginBtn.addEventListener("click", function(e) {
+            e.preventDefault(); // Evita que la página se recargue por defecto
+            
+            // Aquí hacemos el truco: simulamos que navega a la pantalla principal
+            // Si ya tienes la función 'navegar', la usamos:
+            if (typeof navegar === "function") {
+                navegar('screen-ventas', 'btn-nav-ventas'); 
+            } else {
+                // Si no, al menos le damos una alerta bonita de éxito
+                alert("¡Sesión iniciada con éxito en GestiPro!");
+            }
+        });
+    }
+});
+</script>
